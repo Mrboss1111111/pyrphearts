@@ -12,7 +12,7 @@ A program that utilises pypresence module, using [pyrp](https://github.com/njlgb
 ## Planned content
 - [x] KH3 Functionality
 - [ ] Major Refactor
-- [ ] OOP if possible
+- [ ] OOP if possible or opt for better PO
 
 ## License
 [![license](https://img.shields.io/github/license/qwertyquerty/pypresence.svg?style=for-the-badge)](https://github.com/qwertyquerty/pypresence/blob/master/LICENSE)
