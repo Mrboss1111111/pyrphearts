@@ -23,7 +23,8 @@ PROGRAM_NAME = {'KH1': 'KINGDOM HEARTS FINAL MIX.exe',
 IMAGES = {'KH1': 'kh', 'KHCoM': 'khcom', 'KH2': 'kh2', 'KHBbS': 'kh1_5_2_5',
           'KHL': 'kh1_5_2_5', 'KH12': 'kh1_5_2_5', 'KH3': 'kh3', 'KHH': 'khh'
           }
-paths = {'KH12': 'KINGDOM HEARTS HD 1.5+2.5 ReMIX.exe', 'KH3': None}
+paths = {'KH12': f'{os.path.abspath(os.getcwd())}\KINGDOM HEARTS HD 1.5+2.5 ReMIX.exe',
+         'KH3': f'{os.path.abspath(os.getcwd())}\KINGDOM HEARTS 3.exe'}
 
 rpc = Presence(827398544986079242)
 
@@ -31,14 +32,14 @@ config_file = 'config.ini'
 config = ConfigParser()
 config.read(config_file)
 
-if config['Program']['KH12'] != '<KINGDOM HEARTS HD 1.5+2.5 ReMIX Path>':
+if config['Program']['KH12']:
     paths['KH12'] = config['Program']['KH12']
 
-if config['Program']['KH12'] != '<KINGDOM HEARTS 3 Path':
-    paths['KH12'] = config['Program']['KH3']
+if config['Program']['KH12']:
+    paths['KH3'] = config['Program']['KH3']
 
 state = "KINGDOM HEARTS 1.5 and 2.5 ReMIX" if config[
-    'State']['KH12'] == 'True' else "KINGDOM HEARTS 3"
+    'State']['KH12'] == '<True>' else "KINGDOM HEARTS 3"
 print(f'State: {state}\n')
 
 up_flag = 0
@@ -53,7 +54,10 @@ try:
 
         if not up_flag:
             try:
-                os.startfile(config['Program']['KH12'])
+                if config['State']['KH12'] == '<True>':
+                    os.startfile(paths['KH12'])
+                elif config['State']['KH12'] == '<False>':
+                    os.startfile(paths['KH3'])
                 up_flag = 1
             except Exception as ex:
                 print(ex)
@@ -69,6 +73,7 @@ try:
             rpc.update(details='KH Main Menu | 358/2D | C', start=start,
                        large_image=IMAGES['KHL'], large_text='Main Menu | 358/2D | C')
             connect_flag = 1
+            game_flags['KHL'] = True
 
         # Kingdom Hearts 1
         if PROGRAM_NAME['KH1'] in (p.name() for p in psutil.process_iter()) and not game_flags['KH1']:
