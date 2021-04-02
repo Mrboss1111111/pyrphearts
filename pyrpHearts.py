@@ -32,7 +32,7 @@ paths = {'KH12': f'{os.path.abspath(os.getcwd())}\KINGDOM HEARTS HD 1.5+2.5 ReMI
 logging.basicConfig(filename='pypr.log', filemode='w',
                     format='[%(asctime)s]%(levelname)s:\n%(message)s',
                     level=logging.DEBUG)
-rpc = Presence(827398544986079242)
+rpc = Presence()
 
 config_file = 'config.ini'
 config = ConfigParser()
