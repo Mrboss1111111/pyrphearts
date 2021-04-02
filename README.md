@@ -1,7 +1,6 @@
-# pyrp
+# pyrp Hearts
 [![pypresence](https://img.shields.io/badge/using-pypresence-00bb88.svg?style=for-the-badge&logo=discord&logoWidth=20)](https://github.com/qwertyquerty/pypresence)  
-An easily configurable Discord Rich Presence.  
-Idea from [EasyRP](https://github.com/Pizzabelly/EasyRP)  
+A program that utilises pypresence module, using pyrp as a foundation.
 
 ## How to use:
 ```markdown
