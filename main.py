@@ -1,7 +1,9 @@
 from configparser import ConfigParser
 
+import logging
 import os
 import subprocess
+import sys
 import time
 
 import psutil
@@ -26,6 +28,9 @@ IMAGES = {'KH1': 'kh', 'KHCoM': 'khcom', 'KH2': 'kh2', 'KHBbS': 'kh1_5_2_5',
 paths = {'KH12': f'{os.path.abspath(os.getcwd())}\KINGDOM HEARTS HD 1.5+2.5 ReMIX.exe',
          'KH3': f'{os.path.abspath(os.getcwd())}\KINGDOM HEARTS 3.exe'}
 
+logging.basicConfig(filename='pypr.log', filemode='w',
+                    format='[%(asctime)s]%(levelname)s:\n%(message)s',
+                    level=logging.DEBUG)
 rpc = Presence(827398544986079242)
 
 config_file = 'config.ini'
@@ -40,7 +45,8 @@ if config['Program']['KH12']:
 
 state = "KINGDOM HEARTS 1.5 and 2.5 ReMIX" if config[
     'State']['KH12'] == '<True>' else "KINGDOM HEARTS 3"
-print(f'State: {state}\n')
+logging.info('Running pyrp')
+logging.info(f'State: {state} ')
 
 up_flag = 0
 connect_flag = 0
@@ -55,20 +61,22 @@ try:
         if not up_flag:
             try:
                 if config['State']['KH12'] == '<True>':
+                    logging.info(f'Running game from {paths["KH12"]}')
                     os.startfile(paths['KH12'])
                 elif config['State']['KH12'] == '<False>':
+                    logging.info(f'Running game from {paths["KH3"]}')
                     os.startfile(paths['KH3'])
                 up_flag = 1
             except Exception as ex:
-                print(ex)
+                logging.error(ex)
                 break
 
         # KHL
         if PROGRAM_NAME['KHL'] in (p.name() for p in psutil.process_iter()) and not connect_flag:
-            print('LAUNCHER detected!')
-            print('Connecting presence...')
+            logging.info('LAUNCHER detected!')
+            logging.info('Connecting presence...')
             rpc.connect()
-            print('Presence connected!\n')
+            logging.info('Presence connected!')
             start = time.time()
             rpc.update(details='KH Main Menu | 358/2D | C', start=start,
                        large_image=IMAGES['KHL'], large_text='Main Menu | 358/2D | C')
@@ -77,82 +85,82 @@ try:
 
         # Kingdom Hearts 1
         if PROGRAM_NAME['KH1'] in (p.name() for p in psutil.process_iter()) and not game_flags['KH1']:
-            print('KH1 detected!')
-            print('Updating presence...')
+            logging.info('KH1 detected!')
+            logging.info('Updating presence...')
             start = time.time()
             rpc.update(details=DETAILS['KH1'], start=start,
                        large_image=IMAGES['KH1'], large_text='KH1',
                        small_image=IMAGES['KHH'], small_text='Kingdom Hearts❣')
-            print('Presence updated!\n')
+            logging.info('Presence updated! ')
             game_flags['KH1'] = True
 
         # Kingdom Hearts Chain of Memories
         if PROGRAM_NAME['KHCoM'] in (p.name() for p in psutil.process_iter()) and not game_flags['KHCoM']:
-            print('KHCoM detected!')
-            print('Updating presence...')
+            logging.info('KHCoM detected!')
+            logging.info('Updating presence...')
             start = time.time()
             rpc.update(details=DETAILS['KHCoM'], start=start,
                        large_image=IMAGES['KHCoM'], large_text='KHCoM',
                        small_image=IMAGES['KHH'], small_text='Kingdom Hearts❣')
-            print('Presence updated!\n')
+            logging.info('Presence updated! ')
             game_flags['KHCoM'] = True
 
         # Kingdom Hearts 2
         if PROGRAM_NAME['KH2'] in (p.name() for p in psutil.process_iter()) and not game_flags['KH2']:
-            print('KH2 detected!')
-            print('Updating presence...')
+            logging.info('KH2 detected!')
+            logging.info('Updating presence...')
             start = time.time()
             rpc.update(details=DETAILS['KH2'], start=start,
                        large_image=IMAGES['KH2'], large_text='KH2',
                        small_image=IMAGES['KHH'], small_text='Kingdom Hearts❣')
-            print('Presence updated!\n')
+            logging.info('Presence updated! ')
             game_flags['KH2'] = True
 
         # Kingdom Hearts Birth by Sleep
         if PROGRAM_NAME['KHBbS'] in (p.name() for p in psutil.process_iter()) and not game_flags['KHBbS']:
-            print('KHBbS detected!')
-            print('Updating presence...')
+            logging.info('KHBbS detected!')
+            logging.info('Updating presence...')
             start = time.time()
             rpc.update(details=DETAILS['KHBbS'], start=start,
                        large_image=IMAGES['KHBbS'], large_text='KHBbS',
                        small_image=IMAGES['KHH'], small_text='Kingdom Hearts❣')
-            print('Presence updated!\n')
+            logging.info('Presence updated! ')
             game_flags['KHBbS'] = True
 
         # Kingdom Hearts 1
         if PROGRAM_NAME['KH1'] not in (p.name() for p in psutil.process_iter()) and game_flags['KH1']:
-            print('KH1 not detected anymore')
-            print('Checking if main game is running...\n')
+            logging.warning('KH1 not detected anymore')
+            logging.debug('Checking if main game is running... ')
             time.sleep(10)
 
             if PROGRAM_NAME['KHM'] not in (p.name() for p in psutil.process_iter()):
-                print('The game is not running...\n')
+                logging.warning('The game is not running... ')
                 if connect_flag:
                     rpc.close()
-                print('Disconnecting presence')
-                print('Exiting program...')
+                logging.info('Disconnecting presence')
+                logging.info('Exiting program...')
                 time.sleep(2)
                 break
             else:
-                print('The game is still running!')
-                print('Checking if Launcher is running...\n')
+                logging.info('The game is still running!')
+                logging.debug('Checking if Launcher is running... ')
                 time.sleep(5)
 
                 if PROGRAM_NAME['KHL'] in (p.name() for p in psutil.process_iter()):
-                    print('Launcher is running!')
-                    print('Updating presence...')
+                    logging.info('Launcher is running!')
+                    logging.info('Updating presence...')
                     start = time.time()
                     rpc.update(details='KH Main Menu | 358/2D | C', start=start,
                                large_image=IMAGES['KHL'], large_text='Main Menu | 358/2D | C')
-                    print('Presence updated!\n')
+                    logging.info('Presence updated! ')
                     game_flags['KHL'] = True
                 else:
-                    print('Launcher is no longer running')
-                    print('Assuming game\'s no longer running')
+                    logging.warning('Launcher is no longer running')
+                    logging.info('Assuming game\'s no longer running')
                     if connect_flag:
                         rpc.close()
-                    print('Disconnecting presence')
-                    print('Exiting program...')
+                    logging.info('Disconnecting presence')
+                    logging.info('Exiting program...')
                     time.sleep(2)
                     break
 
@@ -160,38 +168,38 @@ try:
 
         # Kingdom Hearts Chain of Memories
         if PROGRAM_NAME['KHCoM'] not in (p.name() for p in psutil.process_iter()) and game_flags['KHCoM']:
-            print('KHCoM not detected anymore')
-            print('Checking if main game is running...\n')
+            logging.warning('KHCoM not detected anymore')
+            logging.debug('Checking if main game is running... ')
             time.sleep(10)
 
             if PROGRAM_NAME['KHM'] not in (p.name() for p in psutil.process_iter()):
-                print('The game is not running...\n')
+                logging.warning('The game is not running... ')
                 if connect_flag:
                     rpc.close()
-                print('Disconnecting presence')
-                print('Exiting program...')
+                logging.info('Disconnecting presence')
+                logging.info('Exiting program...')
                 time.sleep(2)
                 break
             else:
-                print('The game is still running!')
-                print('Checking if Launcher is running...\n')
+                logging.info('The game is still running!')
+                logging.debug('Checking if Launcher is running... ')
                 time.sleep(5)
 
                 if PROGRAM_NAME['KHL'] in (p.name() for p in psutil.process_iter()):
-                    print('Launcher is running!')
-                    print('Updating presence...')
+                    logging.info('Launcher is running!')
+                    logging.info('Updating presence...')
                     start = time.time()
                     rpc.update(details='KH Main Menu | 358/2D | C', start=start,
                                large_image=IMAGES['KHL'], large_text='Main Menu | 358/2D | C')
-                    print('Presence updated!\n')
+                    logging.info('Presence updated! ')
                     game_flags['KHL'] = True
                 else:
-                    print('Launcher is no longer running')
-                    print('Assuming game\'s no longer running')
+                    logging.warning('Launcher is no longer running')
+                    logging.info('Assuming game\'s no longer running')
                     if connect_flag:
                         rpc.close()
-                    print('Disconnecting presence')
-                    print('Exiting program...')
+                    logging.info('Disconnecting presence')
+                    logging.info('Exiting program...')
                     time.sleep(2)
                     break
 
@@ -199,38 +207,38 @@ try:
 
         # Kingdom Hearts 2
         if PROGRAM_NAME['KH2'] not in (p.name() for p in psutil.process_iter()) and game_flags['KH2']:
-            print('KH2 not detected anymore')
-            print('Checking if main game is running...\n')
+            logging.warning('KH2 not detected anymore')
+            logging.debug('Checking if main game is running... ')
             time.sleep(10)
 
             if PROGRAM_NAME['KHM'] not in (p.name() for p in psutil.process_iter()):
-                print('The game is not running...\n')
+                logging.warning('The game is not running... ')
                 if connect_flag:
                     rpc.close()
-                print('Disconnecting presence')
-                print('Exiting program...')
+                logging.info('Disconnecting presence')
+                logging.info('Exiting program...')
                 time.sleep(2)
                 break
             else:
-                print('The game is still running!')
-                print('Checking if Launcher is running...\n')
+                logging.info('The game is still running!')
+                logging.debug('Checking if Launcher is running... ')
                 time.sleep(5)
 
                 if PROGRAM_NAME['KHL'] in (p.name() for p in psutil.process_iter()):
-                    print('Launcher is running!')
-                    print('Updating presence...')
+                    logging.info('Launcher is running!')
+                    logging.info('Updating presence...')
                     start = time.time()
                     rpc.update(details='KH Main Menu | 358/2D | C', start=start,
                                large_image=IMAGES['KHL'], large_text='Main Menu | 358/2D | C')
-                    print('Presence updated!\n')
+                    logging.info('Presence updated! ')
                     game_flags['KHL'] = True
                 else:
-                    print('Launcher is no longer running')
-                    print('Assuming game\'s no longer running')
+                    logging.warning('Launcher is no longer running')
+                    logging.info('Assuming game\'s no longer running')
                     if connect_flag:
                         rpc.close()
-                    print('Disconnecting presence')
-                    print('Exiting program...')
+                    logging.info('Disconnecting presence')
+                    logging.info('Exiting program...')
                     time.sleep(2)
                     break
 
@@ -238,38 +246,38 @@ try:
 
         # Kingdom Hearts Birth by Sleep
         if PROGRAM_NAME['KHBbS'] not in (p.name() for p in psutil.process_iter()) and game_flags['KHBbS']:
-            print('KHBbS not detected anymore')
-            print('Checking if main game is running...\n')
+            logging.warning('KHBbS not detected anymore')
+            logging.debug('Checking if main game is running... ')
             time.sleep(10)
 
             if PROGRAM_NAME['KHM'] not in (p.name() for p in psutil.process_iter()):
-                print('The game is not running...\n')
+                logging.warning('The game is not running... ')
                 if connect_flag:
                     rpc.close()
-                print('Disconnecting presence')
-                print('Exiting program...')
+                logging.info('Disconnecting presence')
+                logging.info('Exiting program...')
                 time.sleep(2)
                 break
             else:
-                print('The game is still running!')
-                print('Checking if Launcher is running...\n')
+                logging.info('The game is still running!')
+                logging.debug('Checking if Launcher is running... ')
                 time.sleep(5)
 
                 if PROGRAM_NAME['KHL'] in (p.name() for p in psutil.process_iter()):
-                    print('Launcher is running!')
-                    print('Updating presence...')
+                    logging.info('Launcher is running!')
+                    logging.info('Updating presence...')
                     start = time.time()
                     rpc.update(details='KH Main Menu | 358/2D | C', start=start,
                                large_image=IMAGES['KHL'], large_text='Main Menu | 358/2D | C')
-                    print('Presence updated!\n')
+                    logging.info('Presence updated! ')
                     game_flags['KHL'] = True
                 else:
-                    print('Launcher is no longer running')
-                    print('Assuming game\'s no longer running')
+                    logging.warning('Launcher is no longer running')
+                    logging.info('Assuming game\'s no longer running')
                     if connect_flag:
                         rpc.close()
-                    print('Disconnecting presence')
-                    print('Exiting program...')
+                    logging.info('Disconnecting presence')
+                    logging.info('Exiting program...')
                     time.sleep(2)
                     break
 
@@ -277,13 +285,13 @@ try:
 
             # Kingdom Hearts Launcher
         if PROGRAM_NAME['KHL'] not in (p.name() for p in psutil.process_iter()) and game_flags['KHL'] and PROGRAM_NAME['KHM'] not in (p.name() for p in psutil.process_iter()):
-            print('Launcher and main game not detected anymore')
+            logging.warning('Launcher and main game not detected anymore')
 
             if connect_flag:
                 rpc.close()
 
-            print('Disconnecting presence')
-            print('Exiting program...')
+            logging.info('Disconnecting presence')
+            logging.info('Exiting program...')
             time.sleep(2)
             break
 
@@ -292,6 +300,6 @@ try:
 except KeyboardInterrupt:
     if connect_flag:
         rpc.close()
-    print('Disconnecting presence...')
-    print('Exiting program...')
+    logging.info('Disconnecting presence...')
+    logging.info('Exiting program...')
     time.sleep(2)
