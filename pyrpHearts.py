@@ -131,12 +131,13 @@ try:
         # Kingdom Hearts III
         if PROGRAM_NAME['KH3'] in (p.name() for p in psutil.process_iter()) and not game_flags['KH3']:
             logging.info('KH3 detected!')
-            logging.info('Updating presence...')
+            logging.info('Connecting presence...')
+            rpc.connect()
             start = time.time()
             rpc.update(details=DETAILS['KH3'], start=start,
                        large_image=IMAGES['KH3'], large_text='KH3',
                        small_image=IMAGES['KHH'], small_text='Kingdom Hearts❣')
-            logging.info('Presence updated! ')
+            logging.info('Presence connected!')
             game_flags['KH3'] = True
 
         # Kingdom Hearts 1
