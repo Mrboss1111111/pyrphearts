@@ -31,10 +31,10 @@ config_file = 'config.ini'
 config = ConfigParser()
 config.read(config_file)
 
-if config['Program']['KH12'] != '<KINGDOM HEARTS HD 1.5+2.5 ReMIX Path>' or config['Program']['KH12']:
+if config['Program']['KH12'] != '<KINGDOM HEARTS HD 1.5+2.5 ReMIX Path>':
     paths['KH12'] = config['Program']['KH12']
 
-if config['Program']['KH12'] != '<KINGDOM HEARTS 3 Path' or config['Program']['KH3']:
+if config['Program']['KH12'] != '<KINGDOM HEARTS 3 Path':
     paths['KH12'] = config['Program']['KH3']
 
 state = "KINGDOM HEARTS 1.5 and 2.5 ReMIX" if config[
