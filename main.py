@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 
+import os
 import subprocess
 import time
 
@@ -13,17 +14,31 @@ details = {'KH1': 'Kingdom Hearts 1.5 💙', 'KHCoM': 'Chain of Memories 🤍',
 states = {'KH1': None, 'KHCoM': None, 'KH358': None, 'KH2': None,
           'KHBbS': None, 'KHC': None, 'KH3': None
           }
+paths = {'KH12': 'KINGDOM HEARTS HD 1.5+2.5 ReMIX.exe', 'KH3': None}
+
+rpc = Presence(827398544986079242)
 
 config_file = 'config.ini'
 config = ConfigParser()
 config.read(config_file)
 
-states = [x for x in config]
+if config['Program']['KH12'] != '<KINGDOM HEARTS HD 1.5+2.5 ReMIX>' or config['Program']['KH12']:
+    paths['KH12'] = config['Program']['KH12']
 
-rpc = Presence(827398544986079242)
+up_flag = 0
 
-while 1:
-    time.sleep(10)
+try:
+    while True:
+        if not up_flag:
+            try:
+                os.startfile(config['Program']['KH12'])
+            except Exception as ex:
+                print(ex)
+            up_flag = 1
+
+except KeyboardInterrupt:
+    print('Closing program...')
+    time.sleep(1)
 
 
 # from configparser import ConfigParser
