@@ -28,7 +28,7 @@ IMAGES = {'KH1': 'kh', 'KHCoM': 'khcom', 'KH2': 'kh2', 'KHBbS': 'kh1_5_2_5',
 paths = {'KH12': f'{os.path.abspath(os.getcwd())}\KINGDOM HEARTS HD 1.5+2.5 ReMIX.exe',
          'KH3': f'{os.path.abspath(os.getcwd())}\KINGDOM HEARTS III.exe'}
 
-logging.basicConfig(filename='pypr.log', filemode='w',
+logging.basicConfig(filename='pyrp.log', filemode='w',
                     format='[%(asctime)s]%(levelname)s:\n%(message)s',
                     level=logging.DEBUG)
 rpc = Presence()
