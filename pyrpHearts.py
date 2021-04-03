@@ -2,7 +2,6 @@ from configparser import ConfigParser
 
 import logging
 import os
-import subprocess
 import sys
 import time
 
@@ -57,8 +56,6 @@ game_flags = {'KH1': False, 'KHCoM': False, 'KH2': False, 'KHBbS': False,
 
 try:
     while True:
-        subprocesses = subprocess.check_output('tasklist', shell=True)
-
         if not up_flag:
             try:
                 if config['State']['KH12'] == '<True>':
